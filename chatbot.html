@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🩺 Medical Assistance Chatbot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            flex-direction: column;
+            margin: 0;
+        }
+        .chat-container {
+            width: 400px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 2px solid #0288d1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .logo {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #01579b;
+        }
+        .chat-box {
+            height: 300px;
+            width: 100%;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: left;
+        }
+        .input-box {
+            display: flex;
+            width: 100%;
+            margin-top: 10px;
+        }
+        input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #0288d1;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+        button {
+            padding: 10px 15px;
+            background: #0288d1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #01579b;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <img src="https://thumbs.dreamstime.com/b/female-doctor-vector-logotype-medicine-identity-concept-logo-clinic-medical-pharmacy-online-chat-business-health-care-192420586.jpg" alt="Doctor Logo" class="logo">
+        <h2>🩺 Medical Chatbot</h2>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="input-box">
+            <input type="text" id="userInput" placeholder="Type your answer here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script>
+        let userSymptoms = [];
+        let questions = [
+            "Do you have a fever? (yes/no)",
+            "Are you experiencing body pain? (yes/no)",
+            "Do you have a cough or cold? (yes/no)",
+            "Do you feel weak or fatigued? (yes/no)",
+            "Do you have headaches? (yes/no)",
+            "Do you have rashes on your body? (yes/no)",
+            "Are you experiencing nausea or vomiting? (yes/no)"
+        ];
+        let questionIndex = 0;
+
+        let diseases = {
+            "Dengue": ["yes", "yes", "no", "yes", "yes", "yes", "no"],
+            "Malaria": ["yes", "yes", "no", "yes", "yes", "no", "yes"],
+            "Viral Fever": ["yes", "yes", "yes", "yes", "yes", "no", "no"],
+            "Common Cold": ["no", "no", "yes", "yes", "no", "no", "no"]
+        };
+
+        function startDiagnosis() {
+            questionIndex = 0;
+            userSymptoms = [];
+            appendMessage("Bot: " + questions[questionIndex]);
+        }
+
+        function sendMessage() {
+            let userInput = document.getElementById("userInput").value.toLowerCase().trim();
+            if (userInput !== "yes" && userInput !== "no") {
+                appendMessage("Bot: Please answer with 'yes' or 'no'.");
+                return;
+            }
+
+            appendMessage("You: " + userInput);
+            userSymptoms.push(userInput);
+            questionIndex++;
+
+            if (questionIndex < questions.length) {
+                setTimeout(() => appendMessage("Bot: " + questions[questionIndex]), 1000);
+            } else {
+                setTimeout(diagnoseDisease, 1000);
+            }
+
+            document.getElementById("userInput").value = "";
+        }
+
+        function diagnoseDisease() {
+            let bestMatch = "Unknown Condition";
+            let highestMatch = 0;
+
+            for (let disease in diseases) {
+                let matchCount = diseases[disease].filter((symptom, index) => symptom === userSymptoms[index]).length;
+                if (matchCount > highestMatch) {
+                    highestMatch = matchCount;
+                    bestMatch = disease;
+                }
+            }
+
+            appendMessage("Bot: Based on your symptoms, you may have " + bestMatch + ". Please consult a doctor for confirmation.");
+        }
+
+        function appendMessage(message) {
+            let chatBox = document.getElementById("chatBox");
+            let msgElement = document.createElement("p");
+            msgElement.innerHTML = message;
+            chatBox.appendChild(msgElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        document.getElementById("userInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+
+        startDiagnosis();
+    </script>
+</body>
+</html>
