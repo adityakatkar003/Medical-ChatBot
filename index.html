@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan to Open Medical Chatbot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f5f5f5;
+            flex-direction: column;
+        }
+        h2 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 2px solid #0288d1;
+            padding: 10px;
+            background: white;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h2>📲 Scan to Open Medical Chatbot</h2>
+    <canvas id="qrcode"></canvas>
+
+    <script>
+        let chatbotURL = "https://adityakatkar003.github.io/-medical-chatbot/chatbot.html"; // Link to chatbot page
+        let qr = new QRious({
+            element: document.getElementById('qrcode'),
+            value: chatbotURL,
+            size: 200
+        });
+    </script>
+</body>
+</html>
